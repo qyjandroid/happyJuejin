@@ -4,6 +4,7 @@ import { Account } from "../types";
 export default async function autoLuckDraw(_browser: Browser, page: Page, _account: Account) {
 
     let successLuckDraw = false;
+    let luckDrawResult="抽奖";
     let successStick = false;
 
     try {
@@ -24,11 +25,14 @@ export default async function autoLuckDraw(_browser: Browser, page: Page, _accou
             if (submitBtn) {
                 submitBtn.click();
                 successLuckDraw = true;
-                console.log("autoLuckDraw：抽奖成功")
+                let luckDrawContent=await page.$eval('.lottery_modal .byte-modal__body .title',el=>el.innerHTML);
+                console.log(`抽奖成功-${luckDrawContent}`);
+                luckDrawResult=luckDrawContent;
             }
         } else {
             successLuckDraw = true;
-            console.log("autoLuckDraw：已抽奖")
+            console.log("autoLuckDraw：已抽奖");
+            luckDrawResult="已抽奖";
         }
         //沾喜气按钮
         let festivityBtn = await page.$$('svg.stick-btn');
@@ -47,7 +51,8 @@ export default async function autoLuckDraw(_browser: Browser, page: Page, _accou
             success: false,
             data: {
                 successStick,
-                successLuckDraw
+                successLuckDraw,
+                luckDrawResult
             }
         }
     }
@@ -56,7 +61,8 @@ export default async function autoLuckDraw(_browser: Browser, page: Page, _accou
         success: true,
         data: {
             successStick,
-            successLuckDraw
+            successLuckDraw,
+            luckDrawResult,
         }
     }
 }

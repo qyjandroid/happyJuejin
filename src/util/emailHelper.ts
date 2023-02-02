@@ -15,6 +15,7 @@ interface BodyParams {
 
 export function buildBody(params: BodyParams) {
     return `
+    <div>-----------------------------------------------</div>
     <div><b>账号${params.account?.account}执行结果：</b></div>
     <div>签到：${params.sign}</div>
     <div>抽奖：${params.luckDraw}</div>
@@ -37,37 +38,50 @@ interface SendOptions{
     account: Account;
 }
 
-export function sendHappyResult(options: SendOptions) {
-    const bodyParams: BodyParams = {
-        account: options.account
-    };
+export function sendHappyResult(happyResultArray: SendOptions[]) {
+    let htmlStr="";
+    let winningMsg="";
+    for(let i=0;i<happyResultArray.length;i++){
+        const options=happyResultArray[i];
 
-    options.results.forEach(r => {
-        switch (r.type) {
-            case "autoBugFix":
-                bodyParams.bugFix = r.success ? `已完成, 收集bug数量${r.data?.count}`: `失败，原因：${r.message}`
-                break;
-            case "autoDigMine":
-                bodyParams.digMine = r.success ? `已完成。当局获取：${r.data.gameDiamond}, 今日获取：${r.data.todayDiamond}`: `失败，原因：${r.message}`
-                break;
-            case "autoLuckDraw":
-                bodyParams.luckDraw = r.success ? `已完成`: `失败，原因：${r.message}`
-                break;
-            case "autoSign":
-                bodyParams.sign = r.success ? `已完成。持续签到${r.data?.continuousDays ?? '-'}天，累计签到${r.data?.totalDays ?? '-'}天`: `失败，原因：${r.message}`
-                break;
-            case 'autoMineCount':
-                bodyParams.mineCount = r.success ? r.data?.mineCount ?? '-': '失败：原因'
-            default:
-                break;
-        }
-    })
+        const bodyParams: BodyParams = {
+            account: options.account
+        };
+    
+        options.results.forEach(r => {
+            switch (r.type) {
+                case "autoBugFix":
+                    bodyParams.bugFix = r.success ? `已完成, 收集bug数量${r.data?.count}`: `失败，原因：${r.message}`
+                    break;
+                case "autoDigMine":
+                    bodyParams.digMine = r.success ? `已完成。当局获取：${r.data.gameDiamond}, 今日获取：${r.data.todayDiamond}`: `失败，原因：${r.message}`
+                    break;
+                case "autoLuckDraw":
+                    bodyParams.luckDraw = r.success ? `已完成,结果:${r.data.luckDrawResult}`: `失败，原因：${r.message}`
+                    break;
+                case "autoSign":
+                    bodyParams.sign = r.success ? `已完成。持续签到${r.data?.continuousDays ?? '-'}天，累计签到${r.data?.totalDays ?? '-'}天`: `失败，原因：${r.message}`
+                    break;
+                case 'autoMineCount':
+                    //矿石总数量
+                    bodyParams.mineCount = r.success ? r.data?.mineCount ?? '-': '失败：原因'
+                default:
+                    break;
+            }
+        })
 
+        htmlStr += buildBody(bodyParams);
+        
+       if(bodyParams.luckDraw && !bodyParams.luckDraw.match(/(矿石|彩蛋|抽奖)/)){
+         winningMsg+=`<h1 style="color:blue">${bodyParams.account}：：${bodyParams.luckDraw}</h1>`;
+       }
+    }
+    
     const mailOptions: Mail.Options = {
         from: config.user.email,
         to: config.user.email,
-        subject: "掘金Happy通知",
-        html: buildBody(bodyParams)
+        subject: winningMsg?'【掘金】中奖':"掘金Happy通知",
+        html: winningMsg+htmlStr
     }
     mailer.sendQQEmail(mailOptions);
 }

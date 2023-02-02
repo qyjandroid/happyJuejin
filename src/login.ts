@@ -6,16 +6,18 @@ import { autoSlideAndCookie } from "./autoSlider";
 import {  Page } from 'puppeteer';
 import config from './config';
 import { Account } from './types';
+import { getLocalCookie, setLocalCookies } from './util/cookieUitls';
 
 async function checkIsLogin(page: Page) {
     const loginBtn = await page.$(".login-button");
     return !loginBtn
 }
 
-export async function ensureLogin(accountInfo: Account, page: Page, cookies: any) {
+export async function ensureLogin(accountInfo: Account, page: Page) {
     // 写入cookie
     // const cookies = require("./cookies.json");
     console.log(`${accountInfo.account}准备登录`);
+    const cookies = getLocalCookie();
     const curCookies = cookies[accountInfo.account];
     if (Array.isArray(curCookies) && curCookies.length > 0) {
         //执行操作
@@ -67,8 +69,11 @@ export async function ensureLogin(accountInfo: Account, page: Page, cookies: any
         await page.waitForTimeout(6000);
         const curUserCookie = await page.cookies();
         const newCookie = { ...cookies, [accountInfo.account]: curUserCookie };
-        fs.writeFileSync(path.join(__dirname, "../cookies.json"), JSON.stringify(newCookie, null, "\t"));
+        setLocalCookies(newCookie);
+        // cookies = newCookie;
+        // fs.writeFileSync(path.join(__dirname, "../cookies.json"), JSON.stringify(cookies, null, "\t"));
     }
     // 自动滑块
-    await autoSlideAndCookie(page, cookies, accountInfo.account);
+     await autoSlideAndCookie(page, accountInfo.account);
+    
 }

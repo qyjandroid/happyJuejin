@@ -31,10 +31,47 @@ function getGameToken(page: Page) {
 }
 
 
-const COMMAND = [
-    { "times": 10, "command": ["D", "R", "2", "R", "D", { "times": 10, "command": ["U", "L", "D", "6", "D", "L", "L", "D", "2"] }] }
+// const COMMAND = [
+//     { "times": 10, "command": ["D", "R", "2", "R", "D", { "times": 10, "command": ["U", "L", "D", "6", "D", "L", "L", "D", "2"] }] }
+// ];
+const COMMAND=[
+    {
+        "times": 10,
+        "command": [
+            "U",
+            "R",
+            "L",
+            "4",
+            "L",
+            "D",
+            "D",
+            {
+                "times": 10,
+                "command": [
+                    "U",
+                    "L",
+                    "R",
+                    "6",
+                    "R",
+                    "D",
+                    
+                    {
+                        "times": 10,
+                        "command": [
+                            "2",
+                            "L",
+                            "D",
+                            "L",
+                            "D",
+                            "R",
+                            "R"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
 ];
-
 
 /**
  * 确保游戏结束
@@ -102,7 +139,7 @@ export default async function autoDigMine(browser: Browser, _page: Page, account
         digMineService.setHeaders({
             "Authorization": `Bearer ${res.data}`
         });
-
+        await delay(10 * 1000);
         console.log("确保结束游戏")
         const overGame = await ensureOverGame(account);
         console.log("结束游戏完毕：", overGame
@@ -116,6 +153,7 @@ export default async function autoDigMine(browser: Browser, _page: Page, account
                 success: false,
             }
         }
+        await delay(15 * 1000);
         const cmdRes = await gameCommand(resStartGame.data.gameId, account.uid);
         if (!cmdRes.success) {
             return cmdRes;

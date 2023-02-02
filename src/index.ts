@@ -15,10 +15,13 @@ import autoMineCount from "./tasks/autoMineCount";
 
 import { sendHappyResult } from './util/emailHelper';
 import config from './config';
+import { initCookies } from './util/cookieUitls';
 
 type Task = (browser: Browser, page: Page, _account: Account) => Promise<any>
 
 const taskList: Task[] = [autoSign, autoBugFix, autoLuckDraw, autoDigMine, autoMineCount];
+
+
 
 // const taskList: Task[] = [ autoDigMine];
 function getAccount(): Account[] {
@@ -30,13 +33,7 @@ function getAccount(): Account[] {
     })
 }
 
-function getLocalCookies() {
-    if (!fs.existsSync(path.join(__dirname, "./cookies.json"))) {
-        return {};
-    }
-    const cookies = require("./cookies.json");
-    return cookies;
-}
+
 
 async function goSignPage(page: Page) {
     // 点击头像
@@ -61,17 +58,23 @@ async function goSignPage(page: Page) {
 
 export async function autoAutoHappy() {
     // 获得本地保存的cookie
-    const cookies = getLocalCookies();
+     initCookies();
     //获取所有的账号
     const accounts = getAccount();
     if (!Array.isArray(accounts)) {
         return console.error("没有账号，终止任务");
     };
-
+    let htmlTempData=[];
     for (let i = 0; i < accounts.length; i++) {
         const account = accounts[i];
-        await execAutoTask(account, cookies);
+        const statisticsResult= await execAutoTask(account);
+        if(statisticsResult){
+            htmlTempData.push(statisticsResult);
+        }
+        
     }
+    //发送邮件
+    sendHappyResult(htmlTempData);
 }
 
 async function ensureUid(page: Page) {
@@ -87,8 +90,9 @@ async function ensureUid(page: Page) {
 }
 
 
-async function execAutoTask(account: Account, cookies: any) {
+async function execAutoTask(account: Account) {
     let browser: Browser;
+    let taskResult=null;
     try {
         let pInfo = await createPage({
             headless: true,
@@ -97,7 +101,7 @@ async function execAutoTask(account: Account, cookies: any) {
         let page = pInfo.page;
         browser = pInfo.browser;
         // 确保登录
-        await ensureLogin(account, page, cookies);
+        await ensureLogin(account, page);
 
         console.log("execAutoTask:准备获取uid");
         const uid = await ensureUid(page);
@@ -107,7 +111,6 @@ async function execAutoTask(account: Account, cookies: any) {
         // 去签到页面
         await goSignPage(page);
 
-        // const rdTaskList = taskList.sort(() => Math.random() - 0.5);
         const results = [];
         for (let i = 0; i < taskList.length; i++) {
             try {
@@ -127,10 +130,10 @@ async function execAutoTask(account: Account, cookies: any) {
         await page.waitForTimeout(2000);
         console.log(`${account.account} 所有任务执行完毕`);
 
-        sendHappyResult({
+        taskResult= {
             account,
             results
-        });
+        }
 
     } catch (err) {
         console.log('ensureLogin error:', err);
@@ -139,5 +142,6 @@ async function execAutoTask(account: Account, cookies: any) {
         if (browser && browser!.isConnected) {
             await browser.close();
         }
+        return taskResult;
     }
 }

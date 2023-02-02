@@ -4,6 +4,7 @@ import { Page } from "puppeteer";
 import { delay } from "./util";
 import { calculateDistance } from "./util/distanceCalc";
 import { URLS } from "./const";
+import { getLocalCookie ,setLocalCookies} from "./util/cookieUitls";
 
 const logger = console;
 
@@ -167,18 +168,20 @@ export async function autoSlider(page: Page) {
 }
 
 
-async function innerAutoSlideAndCookie(page: Page, oldCookies: any, account: string) {
+async function innerAutoSlideAndCookie(page: Page, account: string) {
     const cookies = await autoSlider(page);
+    const oldCookies = getLocalCookie();
     const newCookie = { ...oldCookies, [account]: cookies };
-    fs.writeFileSync(path.join(__dirname, "./cookies.json"), JSON.stringify(newCookie, null, "\t"));
-    return cookies;
+    setLocalCookies(newCookie);
+    // fs.writeFileSync(path.join(__dirname, "./cookies.json"), JSON.stringify(newCookie, null, "\t"));
+    return newCookie;
 }
 
-export async function autoSlideAndCookie(page: Page, oldCookies: any, account: string, retryTimes = 5) {
+export async function autoSlideAndCookie(page: Page, account: string, retryTimes = 5) {
     for (let i = 0; i < retryTimes; i++) {
         try {
             logger.log("autoSlideAndCookie:retryTimes", i)
-            const cookies = await innerAutoSlideAndCookie(page, oldCookies, account);
+            const cookies = await innerAutoSlideAndCookie(page, account);
             return cookies;
         } catch (err) {
             logger.error('autoSlideAndCookie error', err);
