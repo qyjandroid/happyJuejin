@@ -145,3 +145,4 @@ async function execAutoTask(account: Account) {
         return taskResult;
     }
 }
+
