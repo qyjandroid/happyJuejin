@@ -79,7 +79,7 @@ export async function autoAutoHappy() {
 
 async function ensureUid(page: Page) {
     await page.click('.avatar-wrapper .avatar');
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(6000);
     await page.waitForSelector('.user-card');
     const uid = await page.$eval(".user-detail .username", el => {
         const href = el.getAttribute("href") || "";
@@ -134,6 +134,8 @@ async function execAutoTask(account: Account) {
             account,
             results
         }
+
+        
 
     } catch (err) {
         console.log('ensureLogin error:', err);
