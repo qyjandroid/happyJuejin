@@ -31,6 +31,12 @@ export default async function autoBugFix(_browser: Browser, page: Page, _account
         // 收集bug
         const result = await collectBug(page);
 
+        //获取bug总数
+        await page.waitForTimeout(getBaseRandomValue(1000, 200));
+        let ownTotalBugs=await page.$eval('.own-bugs .own-remain .value',el=>el.innerHTML);
+        if(result && result.data){
+            result.data.ownTotalBugs=ownTotalBugs;
+        }
         console.log("autoBugFix 完毕:", result);
         return result;
     } catch (err: any) {
@@ -66,7 +72,8 @@ async function collectBug(page: Page) {
     return {
         success: true,
         data: {
-            count: collectCount
+            count: collectCount,
+            ownTotalBugs:""
         }
     }
 }

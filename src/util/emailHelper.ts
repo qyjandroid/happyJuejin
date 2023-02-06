@@ -51,7 +51,7 @@ export function sendHappyResult(happyResultArray: SendOptions[]) {
         options.results.forEach(r => {
             switch (r.type) {
                 case "autoBugFix":
-                    bodyParams.bugFix = r.success ? `已完成, 收集bug数量${r.data?.count}`: `失败，原因：${r.message}`
+                    bodyParams.bugFix = r.success ? `已完成, 收集bug数量${r.data?.count},当前总bug数量:${r.data?.ownTotalBugs}`: `失败，原因：${r.message}`
                     break;
                 case "autoDigMine":
                     bodyParams.digMine = r.success ? `已完成。当局获取：${r.data.gameDiamond}, 今日获取：${r.data.todayDiamond}`: `失败，原因：${r.message}`
