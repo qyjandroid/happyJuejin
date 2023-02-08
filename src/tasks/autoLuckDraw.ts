@@ -36,11 +36,13 @@ export default async function autoLuckDraw(_browser: Browser, page: Page, _accou
         }
         //沾喜气按钮
         let festivityBtn = await page.$$('svg.stick-btn');
-        festivityBtn[1].click();
-        await page.waitForTimeout(3000);
-        let blessingBtn = await page.$('.byte-modal__body .btn.btn-submit');
-        if (blessingBtn) {
-            blessingBtn.click();
+        if(festivityBtn && festivityBtn.length>1){
+            festivityBtn[1].click();
+            await page.waitForTimeout(3000);
+            let blessingBtn = await page.$('.byte-modal__body .btn.btn-submit');
+            if (blessingBtn) {
+                blessingBtn.click();
+            }
         }
         successStick = true;
         console.log("autoLuckDraw：已沾福气")
