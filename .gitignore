@@ -1,3 +1,3 @@
 /node_modules
 /dist
-/src/config/index.local.ts
+/src/cookie.json
