@@ -1,11 +1,12 @@
 import fs from 'fs';
 import path from 'path';
+import config from '../config';
 
 let globalCookies={};
 
 export function initCookies() {
     if (!fs.existsSync(path.join(__dirname, "../cookies.json"))) {
-        return {};
+        return config.user.cookies||{};
     }
     const cookies = require("../cookies.json");
     globalCookies=cookies;

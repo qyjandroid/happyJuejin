@@ -30,10 +30,11 @@ jobs:
           USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
           USER_EMAIL: ${{ secrets.USER_EMAIL }}
           USER_EMAIL_PASSWORD: ${{ secrets.USER_EMAIL_PASSWORD }}
+          USER_COOKIES: ${{ secrets.USER_COOKIES }}
         run: |
           npm run tStart
-      - name: 更新数据
-        uses: JamesIves/github-pages-deploy-action@4.0.0
-        with:
-          branch: main
-          folder: .
+      # - name: 更新数据
+      #   uses: JamesIves/github-pages-deploy-action@4.0.0
+      #   with:
+      #     branch: main
+      #     folder: .
