@@ -19,6 +19,7 @@ export async function ensureLogin(accountInfo: Account, page: Page) {
     console.log(`${accountInfo.account}准备登录`);
     const cookies = getLocalCookie();
     const curCookies = cookies[accountInfo.account];
+    console.log("获取到的1=",curCookies)
     if (Array.isArray(curCookies) && curCookies.length > 0) {
         //执行操作
         await page.setCookie(...curCookies)

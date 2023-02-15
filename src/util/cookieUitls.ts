@@ -6,6 +6,7 @@ let globalCookies={};
 
 export function initCookies() {
     if (!fs.existsSync(path.join(__dirname, "../cookies.json"))) {
+        console.log("初始化c=",config.user.cookies)
         return config.user.cookies||{};
     }
     const cookies = require("../cookies.json");
