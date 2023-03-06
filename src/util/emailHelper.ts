@@ -72,7 +72,7 @@ export function sendHappyResult(happyResultArray: SendOptions[]) {
 
         htmlStr += buildBody(bodyParams);
         
-       if(bodyParams.luckDraw && !bodyParams.luckDraw.match(/(矿石|彩蛋|抽奖)/)){
+       if(bodyParams.luckDraw && !bodyParams.luckDraw.match(/(矿石|彩蛋|抽奖|bug|Error)/)){
          winningMsg+=`<h1 style="color:blue">${bodyParams.account}：：${bodyParams.luckDraw}</h1>`;
        }
     }

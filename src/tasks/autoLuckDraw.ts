@@ -21,13 +21,16 @@ export default async function autoLuckDraw(_browser: Browser, page: Page, _accou
             let freeLotteryBtn = await page.$('#turntable-item-0');
             freeLotteryBtn!.click();
             await page.waitForTimeout(5000);
-            let submitBtn = await page.$('.byte-modal__body .submit');
+            let submitBtn = await page.$('.lottery-modal .close-icon');
             if (submitBtn) {
-                submitBtn.click();
-                successLuckDraw = true;
-                let luckDrawContent=await page.$eval('.lottery_modal .byte-modal__body .title',el=>el.innerHTML);
+                let luckDrawContent=await page.$eval('.lottery-modal .byte-modal__body .title',el=>el.innerHTML);
+                if(luckDrawContent==="触发彩蛋"){
+                     luckDrawContent=await page.$eval('.lottery-modal .desc p',el=>el.innerHTML);
+                }
                 console.log(`抽奖成功-${luckDrawContent}`);
                 luckDrawResult=luckDrawContent;
+                submitBtn.click();
+                successLuckDraw = true;
             }
         } else {
             successLuckDraw = true;
