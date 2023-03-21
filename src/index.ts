@@ -19,7 +19,8 @@ import { initCookies } from './util/cookieUitls';
 
 type Task = (browser: Browser, page: Page, _account: Account) => Promise<any>
 
-const taskList: Task[] = [autoSign, autoBugFix, autoLuckDraw, autoDigMine, autoMineCount];
+//autoDigMine
+const taskList: Task[] = [autoSign, autoBugFix, autoLuckDraw,  autoMineCount];
 
 
 
