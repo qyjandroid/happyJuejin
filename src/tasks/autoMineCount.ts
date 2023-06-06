@@ -17,7 +17,7 @@ export default async function autoMineCount(browser: Browser, _page: Page, accou
         await page.goto("https://juejin.cn/user/center/signin?avatar_menu", {
             waitUntil: "load"
         });
-        await page.waitForTimeout(2000);
+        await page.waitForTimeout(5000);
         // 持续天数和累计签到
         const summary = await page.$eval(".signin .figures", (el) => {
             const cards = el.querySelectorAll(".figure-card");
