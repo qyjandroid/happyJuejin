@@ -54,6 +54,12 @@ export default async function autoBugFix(_browser: Browser, page: Page, _account
  * @param page 
  */
 async function collectBug(page: Page) {
+    await page.waitForTimeout(3000);
+    let blessingBtn = await page.$('.byte-modal__body .byte-btn.byte-btn--default.byte-btn--normal');
+    if (blessingBtn) {
+        blessingBtn.click();
+    }
+
     let collectCount = 0;
 
     await page.waitForTimeout(getBaseRandomValue(6000, 200));
