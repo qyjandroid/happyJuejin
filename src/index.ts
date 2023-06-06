@@ -20,7 +20,13 @@ import { initCookies } from './util/cookieUitls';
 type Task = (browser: Browser, page: Page, _account: Account) => Promise<any>
 
 //autoDigMine
-const taskList: Task[] = [autoSign, autoBugFix, autoLuckDraw,  autoMineCount];
+const taskList: Task[] = [autoSign, autoLuckDraw,  autoMineCount];
+
+const time=Date.now();
+if(time<1686498678000){
+    //6月12
+    taskList.splice(1,0,autoBugFix);
+}
 
 
 
