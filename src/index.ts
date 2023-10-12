@@ -60,10 +60,9 @@ async function goSignPage(page: Page) {
     // 等待跳转
     console.log('等待跳转：开始');
     await page.waitForTimeout(2000);
-    console.log('等待跳转：结束',window.location.href);
     // await page.waitForResponse('https://juejin.cn/user/center/signin?avatar_menu');
     await page.waitForTimeout(8000);
-    console.log('等待跳转：结束1',window.location.href);
+    console.log('等待跳转：结束');
 }
 
 export async function autoAutoHappy() {
@@ -157,4 +156,5 @@ async function execAutoTask(account: Account) {
         return taskResult;
     }
 }
+
 
