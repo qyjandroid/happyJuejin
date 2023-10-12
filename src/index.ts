@@ -16,6 +16,7 @@ import autoMineCount from "./tasks/autoMineCount";
 import { sendHappyResult } from './util/emailHelper';
 import config from './config';
 import { initCookies } from './util/cookieUitls';
+import { findButtonAndClick } from './util/puppeteerElementUtils';
 
 type Task = (browser: Browser, page: Page, _account: Account) => Promise<any>
 
@@ -52,15 +53,17 @@ async function goSignPage(page: Page) {
 
     // 点击钻石
     // console.log('点击钻石：开始');
-    // await page.waitForTimeout(2000);
-    // await page.click('.user-card .user-detail .ore-arrow-icon');
+    await page.waitForTimeout(2000);
+    await findButtonAndClick(page,'.dropdown-list .dropdown-item a',"成长福利");
     // console.log('点击钻石：结束');
 
     // 等待跳转
     console.log('等待跳转：开始');
-    await page.waitForResponse('https://juejin.cn/user/center/signin?avatar_menu');
-    await page.waitForTimeout(15000);
+    await page.waitForTimeout(2000);
     console.log('等待跳转：结束',window.location.href);
+    // await page.waitForResponse('https://juejin.cn/user/center/signin?avatar_menu');
+    await page.waitForTimeout(8000);
+    console.log('等待跳转：结束1',window.location.href);
 }
 
 export async function autoAutoHappy() {
