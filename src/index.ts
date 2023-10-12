@@ -53,7 +53,7 @@ async function goSignPage(page: Page) {
     // 点击钻石
     console.log('点击钻石：开始');
     await page.waitForTimeout(2000);
-    await page.click('.user-card .user-detail .ore');
+    await page.click('.user-card .user-detail .ore-arrow-icon');
     console.log('点击钻石：结束');
 
     // 等待跳转

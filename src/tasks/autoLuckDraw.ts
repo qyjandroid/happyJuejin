@@ -1,5 +1,6 @@
 import { Browser, Page } from "puppeteer";
 import { Account } from "../types";
+import { findButtonAndClick } from "../util/puppeteerElementUtils";
 
 export default async function autoLuckDraw(_browser: Browser, page: Page, _account: Account) {
 
@@ -9,8 +10,8 @@ export default async function autoLuckDraw(_browser: Browser, page: Page, _accou
 
     try {
         await page.waitForTimeout(1000);
-        let menus = await page.$$('.menu.byte-menu a');
-        menus[2].click();
+        await findButtonAndClick(page,".menu.byte-menu a","幸运抽奖");
+
 
         await page.waitForTimeout(6000);
 

@@ -1,5 +1,6 @@
 import { Browser, Page } from "puppeteer";
 import { Account } from "../types";
+import { findButtonAndClick } from "../util/puppeteerElementUtils";
 
 
 async function getSummaryInfo(page: Page) {
@@ -27,9 +28,14 @@ async function getSummaryInfo(page: Page) {
 // 可以直接走接口判断
 export default async function autoSign(_browser: Browser, page: Page, _account: Account) {
     try {
-        await page.waitForSelector('.signin');
-        await page.waitForTimeout(5000);
+        // 
 
+
+        await page.waitForTimeout(1000);
+        await findButtonAndClick(page,".menu.byte-menu a","每日签到");
+        await page.waitForTimeout(8000);
+
+        await page.waitForSelector('.signin');
 
         let signBtn = await page.$('.signin .code-calender .btn');
         let classValue = await page.$eval(".signin .code-calender .btn", el => el.className);
