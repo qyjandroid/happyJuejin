@@ -60,7 +60,9 @@ async function goSignPage(page: Page) {
     // 等待跳转
     console.log('等待跳转：开始');
     await page.waitForTimeout(2000);
-    // await page.waitForResponse('https://juejin.cn/user/center/signin?avatar_menu');
+    await page.waitForNavigation({
+        waitUntil:"load"
+    });
     await page.waitForTimeout(8000);
     console.log('等待跳转：结束');
 }
