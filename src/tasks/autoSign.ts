@@ -32,6 +32,8 @@ export default async function autoSign(_browser: Browser, page: Page, _account: 
 
 
         await page.waitForTimeout(1000);
+
+        //'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/110.0.5478.0 Safari/537.36'
         await findButtonAndClick(page,".menu.byte-menu a","每日签到");
         await page.waitForTimeout(8000);
 

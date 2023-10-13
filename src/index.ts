@@ -23,6 +23,8 @@ type Task = (browser: Browser, page: Page, _account: Account) => Promise<any>
 //autoDigMine
 const taskList: Task[] = [autoSign, autoLuckDraw,  autoMineCount];
 
+// const taskList: Task[] = [autoSign];
+
 const time=Date.now();
 if(time<1686498678000){
     //6月12
@@ -55,15 +57,12 @@ async function goSignPage(page: Page) {
     // console.log('点击钻石：开始');
     await page.waitForTimeout(2000);
     await findButtonAndClick(page,'.dropdown-list .dropdown-item a',"成长福利");
-    // console.log('点击钻石：结束');
-
     // 等待跳转
     console.log('等待跳转：开始');
-    await page.waitForTimeout(2000);
     await page.waitForNavigation({
         waitUntil:"load"
     });
-    await page.waitForTimeout(8000);
+    // console.log('点击钻石：结束');
     console.log('等待跳转：结束');
 }
 
@@ -110,6 +109,7 @@ async function execAutoTask(account: Account) {
             defaultViewport: { width: 1400, height: 1200 }
         });
         let page = pInfo.page;
+        page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
         browser = pInfo.browser;
         // 确保登录
         await ensureLogin(account, page);
