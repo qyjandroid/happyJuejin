@@ -47,21 +47,26 @@ function getAccount(): Account[] {
 
 async function goSignPage(page: Page) {
     // 点击头像
-    console.log('点击头像：开始');
-    await page.click('.avatar-wrapper .avatar');
-    await page.waitForTimeout(2000);
-    await page.waitForSelector('.user-card');
-    console.log('点击头像：完毕');
+    // console.log('点击头像：开始');
+    // await page.click('.avatar-wrapper .avatar');
+    // await page.waitForTimeout(2000);
+    // await page.waitForSelector('.user-card');
+    // console.log('点击头像：完毕');
 
-    // 点击钻石
-    // console.log('点击钻石：开始');
-    await page.waitForTimeout(2000);
-    await findButtonAndClick(page,'.dropdown-list .dropdown-item a',"成长福利");
+    // // 点击钻石
+    // // console.log('点击钻石：开始');
+    // await page.waitForTimeout(2000);
+    // await findButtonAndClick(page,'.dropdown-list .dropdown-item a',"成长福利");
+
+    await page.goto("https://juejin.cn/user/center/signin?avatar_menu", {
+            waitUntil: "load"
+        });
+    await page.waitForTimeout(8000);
     // 等待跳转
-    console.log('等待跳转：开始');
-    await page.waitForNavigation({
-        waitUntil:"load"
-    });
+    // console.log('等待跳转：开始');
+    // await page.waitForNavigation({
+    //     waitUntil:"load"
+    // });
     // console.log('点击钻石：结束');
     console.log('等待跳转：结束');
 }
@@ -143,8 +148,8 @@ async function execAutoTask(account: Account) {
         await ensureLogin(account, page);
 
         console.log("execAutoTask:准备获取uid");
-        const uid = await ensureUid(page);
-        account.uid = uid!;
+        // const uid = await ensureUid(page);
+        // account.uid = uid!;
         console.log("execAutoTask:获取uid完毕");
 
         // 去签到页面
