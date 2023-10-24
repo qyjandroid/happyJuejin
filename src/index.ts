@@ -110,6 +110,24 @@ async function execAutoTask(account: Account) {
             args: [`--window-size=${1400},${1040}`],
         });
         let page = pInfo.page;
+        await page.evaluateOnNewDocument(() => {
+            Object.defineProperty(navigator, 'webdriver', {
+              get: () => false,
+            });
+        });
+        await page.evaluateOnNewDocument(() => {
+            Object.defineProperty(navigator, 'plugins', {
+              get: () => [1, 2, 3],
+            });
+        });
+        await page.evaluateOnNewDocument(() => {
+            (window.navigator as any).chrome = {
+              runtime: {},
+              loadTimes: function() {},
+              csi: function() {},
+              app: {}
+            };
+          });
         page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
         browser = pInfo.browser;
         // 确保登录
