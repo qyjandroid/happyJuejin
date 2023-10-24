@@ -15,7 +15,7 @@ async function checkIsLogin(page: Page) {
 
 export async function ensureLogin(accountInfo: Account, page: Page) {
     // 写入cookie
-    // const cookies = require("./cookies.json");
+    // const cookies = require("./cookie.json");
     console.log(`${accountInfo.account}准备登录`);
     const cookies = getLocalCookie();
     const curCookies = cookies[accountInfo.account];

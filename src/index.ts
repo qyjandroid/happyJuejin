@@ -74,7 +74,7 @@ export async function autoAutoHappy() {
     if (!Array.isArray(accounts)) {
         return console.error("没有账号，终止任务");
     };
-    let htmlTempData=[];
+    let htmlTempData:any[]=[];
     for (let i = 0; i < accounts.length; i++) {
         const account = accounts[i];
         const statisticsResult= await execAutoTask(account);
@@ -106,7 +106,8 @@ async function execAutoTask(account: Account) {
     try {
         let pInfo = await createPage({
             headless: true,
-            defaultViewport: { width: 1400, height: 1200 }
+            defaultViewport: { width: 1400, height: 1040 },
+            args: [`--window-size=${1400},${1040}`],
         });
         let page = pInfo.page;
         page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
