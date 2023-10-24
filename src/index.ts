@@ -88,8 +88,12 @@ export async function autoAutoHappy() {
 }
 
 async function ensureUid(page: Page) {
+    const html=await page.evaluate(()=>{return (document.querySelector(".nav-item.menu") as any).outerHTML});
+    console.log("html==",html);
+    await page.screenshot({ path: 'input1.png', fullPage: true });
     await page.click('.avatar-wrapper .avatar');
     await page.waitForTimeout(6000);
+    await page.screenshot({ path: 'input2.png', fullPage: true });
     await page.waitForSelector('.user-card');
     const uid = await page.$eval(".user-detail .username", el => {
         const href = el.getAttribute("href") || "";
@@ -115,6 +119,8 @@ async function execAutoTask(account: Account) {
               get: () => false,
             });
         });
+     
+
         await page.evaluateOnNewDocument(() => {
             Object.defineProperty(navigator, 'plugins', {
               get: () => [1, 2, 3],
