@@ -16,6 +16,8 @@
     "lodash": "^4.17.21",
     "nodemailer": "^6.9.1",
     "puppeteer": "^19.5.2",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
     "ts-node": "^10.9.1"
   },
   "devDependencies": {

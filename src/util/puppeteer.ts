@@ -1,6 +1,10 @@
 
-import puppeteer, { PuppeteerLaunchOptions } from "puppeteer";
+import  { PuppeteerLaunchOptions } from "puppeteer";
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import _ from "lodash";
+
+puppeteer.use(StealthPlugin());
 
 const DEFAULT_CREATE_OPTIONS: PuppeteerLaunchOptions = {
     headless: true,
