@@ -40,13 +40,10 @@ export default async function autoLuckDraw(_browser: Browser, page: Page, _accou
             luckDrawResult="已抽奖";
         }
 
-        luckValue= await page.evaluate(() => {
-            const curLuckValue = document.querySelector(".progress-wrap .value-wrap .current-value")?.textContent;
-            return {
-                curLuckValue
-            }
-          });
-          
+        luckValue=await page.$eval('.progress-wrap .value-wrap .current-value',el=>el.innerHTML);
+
+
+        console.log(`当前的幸运值为：`,luckValue);
         
         //沾喜气按钮
         let festivityBtn = await page.$$('svg.stick-btn');
