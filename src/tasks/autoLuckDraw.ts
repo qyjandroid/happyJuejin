@@ -7,6 +7,7 @@ export default async function autoLuckDraw(_browser: Browser, page: Page, _accou
     let successLuckDraw = false;
     let luckDrawResult="抽奖";
     let successStick = false;
+    let luckValue;
 
     try {
         await page.waitForTimeout(1000);
@@ -38,6 +39,15 @@ export default async function autoLuckDraw(_browser: Browser, page: Page, _accou
             console.log("autoLuckDraw：已抽奖");
             luckDrawResult="已抽奖";
         }
+
+        luckValue= await page.evaluate(() => {
+            const curLuckValue = document.querySelector(".progress-wrap .value-wrap .current-value")?.textContent;
+            return {
+                curLuckValue
+            }
+          });
+          
+        
         //沾喜气按钮
         let festivityBtn = await page.$$('svg.stick-btn');
         if(festivityBtn && festivityBtn.length>1){
@@ -58,7 +68,8 @@ export default async function autoLuckDraw(_browser: Browser, page: Page, _accou
             data: {
                 successStick,
                 successLuckDraw,
-                luckDrawResult
+                luckDrawResult,
+                luckValue
             }
         }
     }

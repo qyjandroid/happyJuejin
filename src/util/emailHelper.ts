@@ -57,7 +57,7 @@ export function sendHappyResult(happyResultArray: SendOptions[]) {
                     bodyParams.digMine = r.success ? `已完成。当局获取：${r.data.gameDiamond}, 今日获取：${r.data.todayDiamond}`: `失败，原因：${r.message}`
                     break;
                 case "autoLuckDraw":
-                    bodyParams.luckDraw = r.success ? `已完成,结果:${r.data.luckDrawResult}`: `失败，原因：${r.message}`
+                    bodyParams.luckDraw = r.success ? `幸运值：${r.data.luckValue},已完成,结果:${r.data.luckDrawResult}`: `幸运值：${r.data.luckValue},失败，原因：${r.message}`
                     break;
                 case "autoSign":
                     bodyParams.sign = r.success ? `已完成。持续签到${r.data?.continuousDays ?? '-'}天，累计签到${r.data?.totalDays ?? '-'}天`: `失败，原因：${r.message}`
