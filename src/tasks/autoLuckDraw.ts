@@ -39,7 +39,7 @@ export default async function autoLuckDraw(_browser: Browser, page: Page, _accou
             console.log("autoLuckDraw：已抽奖");
             luckDrawResult="已抽奖";
         }
-
+        await page.waitForTimeout(2000);
         luckValue=await page.$eval('.progress-wrap .value-wrap .current-value',el=>el.innerHTML);
 
 
@@ -77,6 +77,7 @@ export default async function autoLuckDraw(_browser: Browser, page: Page, _accou
             successStick,
             successLuckDraw,
             luckDrawResult,
+            luckValue
         }
     }
 }
