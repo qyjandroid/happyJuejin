@@ -10,6 +10,7 @@ interface BodyParams {
     digMine?: string;
     mineCount?: number;
     account?: Account;
+    exChangeList?:string;
 }
 
 
@@ -22,12 +23,13 @@ export function buildBody(params: BodyParams) {
     <div>bugFix：${params.bugFix}</div>
     <div>挖矿：${params.digMine}</div>
     <div>矿石总数：${params.mineCount}</div>
+    <div>兑换物品：${params.exChangeList}</div>
     `
 }
 
 
 interface ResultInfo {
-    type: "autoBugFix" | "autoDigMine" | "autoLuckDraw" | "autoSign" | "autoMineCount";
+    type: "autoBugFix" | "autoDigMine" | "autoLuckDraw" | "autoSign" | "autoMineCount" | 'getExchange';
     success: boolean;
     data: any;
     message: string;
@@ -38,7 +40,7 @@ interface SendOptions{
     account: Account;
 }
 
-export function sendHappyResult(happyResultArray: SendOptions[]) {
+export function sendHappyResult(happyResultArray: SendOptions[],exchangeStr:string) {
     let htmlStr="";
     let winningMsg="";
     for(let i=0;i<happyResultArray.length;i++){
@@ -64,7 +66,8 @@ export function sendHappyResult(happyResultArray: SendOptions[]) {
                     break;
                 case 'autoMineCount':
                     //矿石总数量
-                    bodyParams.mineCount = r.success ? r.data?.mineCount ?? '-': '失败：原因'
+                    bodyParams.mineCount = r.success ? r.data?.mineCount ?? '-': '失败：原因';
+                    break;
                 default:
                     break;
             }
@@ -81,7 +84,7 @@ export function sendHappyResult(happyResultArray: SendOptions[]) {
         from: config.user.email,
         to: config.user.email,
         subject: winningMsg?'【掘金】中奖':"掘金Happy通知",
-        html: winningMsg+htmlStr
+        html: winningMsg + exchangeStr + htmlStr
     }
     mailer.sendQQEmail(mailOptions);
 }

@@ -17,11 +17,12 @@ import { sendHappyResult } from './util/emailHelper';
 import config from './config';
 import { initCookies } from './util/cookieUitls';
 import { findButtonAndClick } from './util/puppeteerElementUtils';
+import getExchange from './tasks/getExchange';
 
 type Task = (browser: Browser, page: Page, _account: Account) => Promise<any>
 
 //autoDigMine
-const taskList: Task[] = [autoSign, autoLuckDraw,  autoMineCount];
+const taskList: Task[] = [autoSign, autoLuckDraw,  autoMineCount, getExchange];
 
 // const taskList: Task[] = [autoSign];
 
@@ -79,17 +80,23 @@ export async function autoAutoHappy() {
     if (!Array.isArray(accounts)) {
         return console.error("没有账号，终止任务");
     };
+    let exchangeStr="";
+
     let htmlTempData:any[]=[];
     for (let i = 0; i < accounts.length; i++) {
         const account = accounts[i];
-        const statisticsResult= await execAutoTask(account);
+        const statisticsResult= await execAutoTask(account,!!exchangeStr);
         if(statisticsResult){
-            htmlTempData.push(statisticsResult);
+            const {exchangeListStr,...other}=statisticsResult;
+            if(exchangeListStr){
+                exchangeStr=exchangeListStr;
+            }
+            htmlTempData.push({...other});
         }
         
     }
     //发送邮件
-    sendHappyResult(htmlTempData);
+    sendHappyResult(htmlTempData,exchangeStr);
 }
 
 async function ensureUid(page: Page) {
@@ -112,9 +119,10 @@ async function ensureUid(page: Page) {
 
 
 
-async function execAutoTask(account: Account) {
+async function execAutoTask(account: Account,isHasExchangeList:boolean) {
     let browser: Browser;
     let taskResult=null;
+    let exchangeListStr="";
     try {
         let pInfo = await createPage({
             headless: true,
@@ -122,27 +130,6 @@ async function execAutoTask(account: Account) {
             args: [`--window-size=${1400},${1040}`],
         });
         let page = pInfo.page;
-        // await page.evaluateOnNewDocument(() => {
-        //     Object.defineProperty(navigator, 'webdriver', {
-        //       get: () => false,
-        //     });
-        // });
-     
-
-        // await page.evaluateOnNewDocument(() => {
-        //     Object.defineProperty(navigator, 'plugins', {
-        //       get: () => [1, 2, 3],
-        //     });
-        // });
-        // await page.evaluateOnNewDocument(() => {
-        //     (window.navigator as any).chrome = {
-        //       runtime: {},
-        //       loadTimes: function() {},
-        //       csi: function() {},
-        //       app: {}
-        //     };
-        //   });
-        // page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
         browser = pInfo.browser;
         // 确保登录
         await ensureLogin(account, page);
@@ -159,11 +146,20 @@ async function execAutoTask(account: Account) {
         for (let i = 0; i < taskList.length; i++) {
             try {
                 const task = taskList[i];
+                const taskName=task.name;
+                if(isHasExchangeList && taskName==='getExchange'){
+                    continue;
+                }
                 console.log(`account:${account.account} 开始执行任务`, task.name);
                 const result = await task.apply(null, [browser, page, account]);
 
-                result.type = task.name;
-                results.push(result);
+                result.type = taskName;
+                if(taskName==='getExchange' && result.data){
+                    exchangeListStr=result.data;
+                }else{
+                    results.push(result);
+                }
+                
                 console.log(`account:${account.account} 执行任务完毕`, task.name)
 
             } catch (error) {
@@ -176,7 +172,8 @@ async function execAutoTask(account: Account) {
 
         taskResult= {
             account,
-            results
+            results,
+            exchangeListStr
         }
 
         
