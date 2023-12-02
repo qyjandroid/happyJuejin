@@ -34,8 +34,9 @@ function parseExchangeList(list:any[]){
         const prizeValue=item.benefit_config?.count;
         const curCap=lottery?.lottery_extra?.cur_cap;
         const useCap=lottery?.lottery_extra?.use_cap;
-
-        result.push(`<div>${name}-价值-${prizeValue}-已兑换-${useCap}-剩余-${curCap}</div>`);
+        if(curCap>0){
+            result.push(`<div>${name}-价值-${prizeValue}-已兑换-${useCap}-剩余-${curCap}</div>`);
+        }
     }
     return result.join("")
     
