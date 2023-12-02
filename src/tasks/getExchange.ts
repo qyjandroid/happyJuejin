@@ -37,7 +37,7 @@ function parseExchangeList(list:any[]){
 
         result.push(`<div>${name}-价值-${prizeValue}-已兑换-${useCap}-剩余-${curCap}</div>`);
     }
-    return result.join(",")
+    return result.join("")
     
 }
 
